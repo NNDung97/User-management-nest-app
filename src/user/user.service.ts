@@ -26,6 +26,13 @@ export class UserService {
         return this.userRepository.findOne({ where: { email } });
     }
 
+    async findOneByUserName(username: string): Promise<Users | null> {
+        if (!username) {
+            return null;
+        }
+        return this.userRepository.findOne({ where: { username } });
+    }
+
     async create(user: Users): Promise<Users> {
         if (!user.email || !user.userpassword) {
             throw new Error('Email and password are required');
@@ -54,5 +61,14 @@ export class UserService {
     async delete(id: number): Promise<boolean> {
         const result = await this.userRepository.delete(id);
         return (result.affected ?? 0) > 0;
+    }
+
+    async updateRefreshToken(userId: number, refreshToken: string | null): Promise<void> {
+        const user = await this.findById(userId);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        user.refresh_token = refreshToken === null ? undefined : refreshToken;
+        await this.userRepository.save(user);
     }
 }

@@ -14,9 +14,15 @@ export class Users {
     @Column({ type: 'varchar', length: 225 })
     userpassword: string;
     
-    // @Column({ type: 'varchar', length: 15, nullable: true })
-    // phone?: string;
+    @Column({ type: 'varchar', length: 225, default: 'user' })
+    role: string;
+
+    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
     
-    // @Column({ type: 'boolean', default: true })
-    // isActive?: boolean;
+    @Column({ type: 'bit', default: true })
+    is_active?: boolean;
+
+    @Column({ nullable: true })
+    refresh_token?: string;
     }

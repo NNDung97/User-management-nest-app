@@ -13,9 +13,9 @@ import { AuthModule } from './auth/auth.module';
     port: 1433,
     username: 'sa',
     password: '123456',
-    database: 'test',
+    database: 'DB-User-management',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    synchronize: false,
+    synchronize: true,
     options: {
       encrypt: false,
     },

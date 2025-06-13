@@ -11,7 +11,6 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     // Define your endpoints here
-    @UseGuards(JwtAuthGuard)
     @Post('create')
     @ApiBody({type: UserDto})
     async createUser(@Body() userDto: UserDto): Promise<Users> {
