@@ -17,6 +17,9 @@ export class Users {
     @Column({ type: 'varchar', length: 225, default: 'user' })
     role: string;
 
+    @Column({ type: 'varchar', length: 225, nullable: true })
+    profile_picture?: string;
+
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
     

@@ -54,6 +54,7 @@ export class UserService {
             user.userpassword = await bcrypt.hash(user.userpassword, salt);
         }
         // Object.assign(existingUser, user);
+        console.log('Updating user with ID:', id, 'with data:', user);
         await this.userRepository.update(id, user);
         return existingUser;
     }
