@@ -59,4 +59,36 @@ export class AuthController {
         }
         return this.authService.Logout(userId);
     }
+
+    @Post('forgot-password')
+    @ApiBody({ schema: {
+    type: 'object',
+    properties: {
+      email: { type: 'string' }
+    }
+  }})
+    async forgotPassword(@Body() body: { email: string }) {
+        const { email } = body;
+        if (!email) {
+            throw new Error('Email is required');
+        }
+        return this.authService.forgotPassword(email);
+    }
+
+    @Post('reset-password')
+    @ApiBody({ schema: {
+    type: 'object',
+    properties: {
+      email: { type: 'string' },
+      otp: { type: 'string' },
+      newPassword: { type: 'string' }
+    }
+  }})
+    async resetPassword(@Body() body: { email: string, otp: string, newPassword: string }) {
+        const { email, otp, newPassword } = body;
+        if (!email || !otp || !newPassword) {
+            throw new Error('Email, OTP, and new password are required');
+        }
+        return this.authService.ResetPassword(email, otp, newPassword);
+    }
 }

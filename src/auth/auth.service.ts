@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { use } from 'passport';
+import { MailSenderService } from 'src/mail_sender/mail_sender.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
+        private readonly mailSender: MailSenderService,
     ) {}
 
     async validateUser(username: string, password: string): Promise<any> {
@@ -89,5 +91,38 @@ export class AuthService {
             access_token: newAccessToken,
         };
     }
+    async forgotPassword(email: string): Promise<any> {
+        const user = await this.userService.findOneByEmail(email);
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
+        const expiredAt = new Date(Date.now() + 5 * 60 * 1000); // OTP valid for 5 minutes
+        await this.userService.update(user.id, {Otp: otp, Otp_Expire: expiredAt});
+        await this.mailSender.sendOTP(user.email, otp);
+        return {
+            message: 'Password reset link sent to your email',
+        };
+    }
 
+    async ResetPassword(email: string, otp: string, newPassword: string): Promise<any> {
+        const user = await this.userService.findOneByEmail(email);
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
+        if (user.Otp !== otp) {
+            throw new UnauthorizedException('Invalid OTP');
+        }
+        if (!user.Otp_Expire || user.Otp_Expire < new Date()) {
+            throw new UnauthorizedException('OTP expired');
+        }
+        console.log('Resetting password',newPassword);
+        // const salt = await bcrypt.genSalt(10);
+        // const newPasswordhash = await bcrypt.hash(newPassword, salt);
+        const result = await this.userService.update(user.id, { userpassword: newPassword, Otp: "", Otp_Expire: undefined });
+        console.log('Update result:', result);
+        return {
+            message: 'Password reset successfully',
+        };
+    }
 }

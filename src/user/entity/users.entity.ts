@@ -28,4 +28,10 @@ export class Users {
 
     @Column({ nullable: true })
     refresh_token?: string;
+
+    @Column({  nullable: true })
+    Otp?: string;
+
+    @Column({ type: 'datetime', nullable: true })
+    Otp_Expire?: Date;
     }

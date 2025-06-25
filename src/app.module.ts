@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
+import { MailSenderService } from './mail_sender/mail_sender.service';
+import { MailSenderModule } from './mail_sender/mail_sender.module';
 
 @Module({
   imports: [UserModule,
@@ -24,8 +26,9 @@ import { UploadModule } from './upload/upload.module';
   }),
     AuthModule,
     UploadModule,
+    MailSenderModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UploadService],
+  providers: [AppService, UploadService, MailSenderService],
 })
 export class AppModule {}

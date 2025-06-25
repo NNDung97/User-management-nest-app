@@ -93,7 +93,7 @@ export class UserController {
             console.log('Đã xóa ảnh cũ:', oldPath);
             }
         }
-        user.profile_picture = filepath; // Assuming Users entity has an 'avatar' field
+        user.profile_picture = filepath;
         await this.userService.update(id, { profile_picture: filepath });
         return { message: 'Avatar uploaded successfully', path: filepath, filename: file.filename };
     }
